@@ -1,0 +1,27 @@
+# Frameworks e Servidor
+fastapi
+uvicorn
+requests
+motor
+
+# Bibliotecas Assíncronas e HTTP
+httpx
+anyio
+httpcore
+websockets
+dnspython
+
+# Validação e Variáveis de Ambiente
+python-dotenv
+email_validator
+pydantic[email] # Mantido para garantir o EmailValidator
+
+# Utilitários e Ferramentas de Desenvolvimento
+rich
+requests
+typer
+click
+python-multipart
+PyYAML
+sentry-sdk
+watchfiles

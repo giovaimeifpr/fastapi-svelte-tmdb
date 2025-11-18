@@ -1,0 +1,11 @@
+# Ignorar pastas de ambiente virtual
+/env
+
+# Ignorar módulos Node.js
+/front/node_modules
+
+# Ignorar arquivos de configuração sensíveis
+.env
+
+# Ignorar caches e logs
+*.log
