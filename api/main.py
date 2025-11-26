@@ -1,8 +1,7 @@
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from services.actor_service import ActorService
-from repositories.actor_repository import ActorRepository
-from models import Actor
+from models import Actor, ActorSearchResult
 
 
 
@@ -22,9 +21,10 @@ app.add_middleware(
 )
 
 
-@app.get("/actors/search")
-def search_actors(name: str = None, person_id: int = None):
-    return ActorService.search_actors(name, person_id)
+@app.get("/actors/search", response_model=ActorSearchResult)
+async def search_actors(name: str = None, person_id: int = None, page: int = 1):
+    result_data = await ActorService.search_actors(name, person_id, page)
+    return result_data
 
 @app.post("/actors/save_favorite", status_code=status.HTTP_201_CREATED)  
 async def save_actor(actor: Actor):
