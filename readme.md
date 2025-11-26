@@ -1,6 +1,8 @@
 ARQUIVO README - MICROSERVIÇO FASTAPI + SVELTE
 
-Este documento explica como configurar e executar o projeto de microserviço que integra FastAPI, Pydantic, MongoDB e as APIs externas TMDB.
+Este documento explica como configurar e executar o projeto de microserviço que integra 
+FastAPI, Pydantic, MongoDB e as APIs externas TMDB
+Para verificar histórico de atualizações ver o arquivo updates.txt
 
 ==================================================
 I. PRÉ-REQUISITOS E CONFIGURAÇÃO INICIAL
@@ -16,8 +18,9 @@ Você precisa das seguintes contas e ferramentas:
 
     a. Ambiente Virtual: Crie e ative o ambiente virtual (ex: 'env').
        (Linux/macOS): source env/bin/activate
-       O script install_venv.sh funciona no linux para criar o env e instalar
-       as bibliotecas, rodar sem o sudo.
+       
+       Opcional - O script install_venv.sh funciona no linux para criar o env e instalar
+       as bibliotecas, rodar sem o sudo. (Pular estapa b. se usar o script)
 
     b. Dependências: Instale as bibliotecas listadas no 'requirements.txt'.
        pip install -r requirements.txt
@@ -45,7 +48,8 @@ II. EXECUÇÃO DAS APLICAÇÕES
    uvicorn main:app --reload
 
 2. INICIAR FRONTEND (SVELTE)
-   Rode este comando dentro da pasta do frontend:
+   Rode esses comandos dentro da pasta do frontend:
+   npm i
    npm run dev
 
 ==================================================

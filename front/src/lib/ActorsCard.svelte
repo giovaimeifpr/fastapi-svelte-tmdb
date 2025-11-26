@@ -20,6 +20,7 @@
                 });
                 const data = await res.json();
                 if (res.ok) {
+                    item.is_favorite = true;
                     alert("Ator salvo com sucesso!");
                     dispatch("saved", item); // dispara evento para o parent, se quiser usar
                 } else {       
@@ -40,15 +41,23 @@
                 <p>Nome: {item.name}</p>
                 <p>Popularidade: {item.popularity}</p>
                 <p>Aniversário: {item.birthday || 'Não Informado'}</p>
-                <p>Gênero: {item.gender}</p>       
+                <p>Gênero: {item.gender}</p>
+                <p>Departamento Conhecido: {item.known_for_department || 'Não Informado'}</p>       
                 {#if item.profile_path}
                         <img src="{IMAGE_BASE_URL}{item.profile_path}" alt="{item.name} poster"/>
                     {:else}
                         <p>Pôster do ator não disponível</p>
                 {/if}                
            
-                <!-- Botão Salvar -->
-              <button class="save-button" onclick={saveActor}>Favoritar</button>
+                {#if item.is_favorite}
+                    <button class="favorite-button" disabled>
+                        ⭐ Já é favorito
+                    </button>
+                {:else}
+                    <button class="save-button" onclick={saveActor}>
+                        Favoritar
+                    </button>
+                {/if}
               
     </div>
 
@@ -87,6 +96,15 @@ p {
     border-radius: 4px; 
     cursor: pointer; 
     font-size: 0.9rem; 
+}
+.favorite-button {
+    background-color: #ffc107;
+    color: black;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: default;
+    font-size: 0.9rem;
 }
 
 

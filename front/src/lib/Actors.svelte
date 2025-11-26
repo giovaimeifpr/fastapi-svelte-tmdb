@@ -3,11 +3,12 @@
     import ActorsCard from "./ActorsCard.svelte";
 
     // --- 1. VARIÁVEIS DE ESTADO PARA OS FILTROS ---
-    let results = $state(null);
+    let searchResponse = $state(null);
     
     // Variáveis vinculadas aos campos de formulário (inputs)
     let name = $state('');
     let id = $state(''); // Nome do Gênero (ex: "Action")
+    let page = $state(''); // Página de resultados (ex: 1, 2, 3...)
 
 
     // --- 2. FUNÇÃO QUE CONSTRÓI E CHAMA A API ---
@@ -17,7 +18,8 @@
         const params = new URLSearchParams();
 
         if (name) params.append('name', name);
-        if (id) params.append('id', id); 
+        if (id) params.append('person_id', id); 
+        if (page) params.append('page', page);
 
         // A URL base da sua API
         let endpoint = `http://localhost:8000/actors/search/?${params.toString()}`;
@@ -38,21 +40,31 @@
         } catch (error) {
             console.error("Erro ao buscar ator:", error);
             // Você pode limpar os resultados ou definir uma mensagem de erro aqui
-            results = []; 
+            searchResponse = {total_results: 0, total_pages: 0, actors: []};
             alert(`Erro na API: ${error.message}`);
         }
     }
 
     // --- 3. FUNÇÃO DE DISPARO ---
     function handleClick() {
+        page = 1; // Reseta para a primeira página a cada nova busca
         // Chamamos getActors() e atualizamos a variável 'results' com os dados
         getActors().then((data)=>{
             // Somente atualiza 'results' se os dados não forem null/undefined (em caso de erro)
             if (data !== undefined) {
-                 results = data;
+                searchResponse = data;
             }
         });
     }
+    function handlePageChange() {
+        // Dispara a busca com o novo valor de 'page' que já foi definido pelo 'bind:value'.
+        getActors().then((data)=>{
+            if (data !== undefined) {
+                 searchResponse = data;
+            }
+        });
+    }
+    
  
 </script>
 
@@ -60,6 +72,14 @@
     <input type="text" placeholder="Nome do ator" bind:value={name}>
     <input type="text" placeholder="Id do ator" bind:value={id}>
     
+    <select bind:value={page} onchange={handlePageChange}>
+        <option value="" disabled selected>Página</option>
+        {#if searchResponse && searchResponse.total_pages > 0}
+            {#each Array(searchResponse.total_pages) as _, index}
+                <option value={index + 1}>{index + 1}</option>
+            {/each}
+        {/if}
+    </select>
     
     <button onclick={handleClick}>Filter Actors</button>
 </div>
@@ -67,15 +87,27 @@
 
 <div class="results">
     
-    {#if results === null}
+    {#if searchResponse === null}
         <p>Preencha pelo menos um campo de pesquisa...</p>
-    {:else if results.length === 0}
-        <p>Nenhum ator encontrado com os filtros selecionados.</p>
     {:else}
-        {#each results as item}
-            <ActorsCard {item}/>
-        {/each}
-    {/if}   
+        <p class="total-info">
+            Total de resultados para sua pesquisa: {searchResponse.total_results}
+            <br>
+            Exibindo {searchResponse.actors.length} resultados nesta página.
+            <br>
+            Página atual: {page || 1} de {searchResponse.total_pages}
+        </p>
+        
+        {#if searchResponse.actors.length === 0}
+            <p>Nenhum ator encontrado com os filtros selecionados.</p>
+        {:else}
+            <div class="actor-cards-container">
+                {#each searchResponse.actors as item}
+                    <ActorsCard {item}/>
+                {/each}
+            </div>
+        {/if}   
+    {/if}  
 
 </div>
 
@@ -87,18 +119,25 @@
     padding: 1rem;
     align-items: center;
     border-bottom: 1px solid #ccc;
-    margin-bottom: 2rem;
 }
 .results {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    
-    /* MUDANÇA CRUCIAL: Define o espaçamento horizontal e vertical */
-    gap: 1rem; 
-    
-    /* Adiciona um padding nas bordas laterais do contêiner, se desejar */
-    padding: 1rem; 
+    display: block; 
+    padding: 1rem;
+}
+
+.total-info {
+    width: 100%; 
+    margin-bottom: 1.5rem; /* Adiciona espaço abaixo do texto de resumo */
+    padding: 0 1rem;
+    line-height: 1.6; /* Melhora a leitura das linhas quebradas */
+}
+
+/* NOVO: A classe que realmente fará os cards ficarem lado a lado */
+.actor-cards-container {
+    display: flex; /* Ativa o Flexbox */
+    flex-wrap: wrap; /* Permite que os cards quebrem para a próxima linha */
+    gap: 1rem; /* Define o espaçamento entre os cards */
+    padding: 0 1rem; /* Mantém o padding lateral */
 }
 
 </style>

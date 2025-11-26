@@ -1,0 +1,9 @@
+Atualização 26-11-25
+
+-Foi otimizado o install_venv que cria o ambiente virtual
+-Foi modificado o readme.md com informações atualizadas.
+-Foi mudado todas a funções para async def, já que precisamos consultar
+o mongodb para veficar os atores favoritos. Com essa funcionalidade
+foi possivel identificar na busca os que já são favoritos.
+-Foi modificado os returns para dicionário {}, já que também implementamos
+total_results e total_pages.

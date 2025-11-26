@@ -1,34 +1,5 @@
 #!/bin/bash
-echo "--- Configuração do Ambiente Python da CAROLICIA ---"
-
-if ! command -v python3 &> /dev/null
-then
-    echo "ERRO: O comando 'python3' não foi encontrado. Tentando instalar..."
-    
-    # Tenta instalar o Python 3 via APT (padrão em Debian/Ubuntu)
-    if command -v apt-get &> /dev/null
-    then
-        echo "Usando 'sudo apt-get install' para instalar Python 3. Isso requer privilégios de administrador (sudo)."
-        
-        # O script VAI PARAR aqui e pedir a senha do sudo se necessário.
-        sudo apt-get update && sudo apt-get install -y python3 python3-venv
-        
-        # Verifica novamente após a instalação
-        if [ $? -ne 0 ] || ! command -v python3 &> /dev/null; then
-            echo "ERRO CRÍTICO: Falha na instalação do Python 3 ou permissão negada."
-            echo "O ambiente não pode ser configurado sem o Python 3. Saindo."
-            exit 1
-        fi
-        echo "✅ Python 3 instalado com sucesso."
-    else
-        echo "ERRO CRÍTICO: Python 3 não encontrado e 'apt-get' não está disponível para instalação automática."
-        echo "Por favor, instale o Python 3 manualmente."
-        exit 1
-    fi
-fi
-
-echo "✅ Python 3 encontrado: $(python3 --version)"
-
+echo "--- Configuração do Ambiente virtual do Python ---"
 
 # 1. Cria a Pasta de Projetos
 PROJECTS_FOLDER="projetos"
